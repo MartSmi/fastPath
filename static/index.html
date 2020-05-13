@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    form {
+      width: 40%;
+    }
+
+    label {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      position: relative
+    }
+  </style>
+</head>
+
+<body>
+  <form id="form1">
+    <label for="start">Start</label>
+    <input type="text" id="start" name="start">
+    <label for="checkpoint1">Checkpoint</label>
+    <input type="text" id="checkpoint1" name="checkpoint1">
+    <label for="finish">Finish</label>
+    <input type="text" id="finish" name="finish">
+  </form>
+
+  <button onclick="addCheckpoint()">Add</button>
+
+  <script>
+    function addCheckpoint() {
+      var checkpoint = document.createElement("INPUT");
+      var form = document.getElementById("form1");
+      form.insertBefore(checkpoint, document.getElementById("finish"));
+    }
+  </script>
+</body>
+
+</html>
