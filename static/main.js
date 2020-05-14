@@ -2,7 +2,8 @@ function addCheckpoint() {
     let checkpoint = document.createElement("INPUT");
     let checkpoints = document.getElementsByClassName("checkpoint");
     checkpoint.id = "checkpoint" + (checkpoints.length + 1);
-    checkpoint.className = "checkpoint"
+    checkpoint.className = "form-control checkpoint"
+    checkpoint.placeholder = "Address "
     checkpoints[0].parentNode.insertBefore(checkpoint, checkpoints[checkpoints.length - 1].nextSibling);
   }
 
