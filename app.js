@@ -16,10 +16,6 @@ app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-app.get("/", (req, res) => {
-  res.sendFile("./index.html", { root: path.join(__dirname, "./static") });
-});
-
 const elem_limit = 25; //half element limit
 
 function fetchJSON(url) {
@@ -31,6 +27,7 @@ function fetchJSON(url) {
 }
 
 async function getDistances() {
+  console.log("getDistances");
   var max = addresses.street.length - 1;
   var amount = Math.ceil(max / elem_limit);
   let urls = new Array();
@@ -175,7 +172,10 @@ function shortUrl(url) {
 }
 
 //getLocations();
-getDistances();
+
+//getDistances(); this is the deal
+
+
 //var data = getDistances();
 //var path = findFastest(getDistances());
 //console.log(getDistances());
