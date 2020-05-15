@@ -1,92 +1,97 @@
-import React, { Component } from 'react';
-import Checkpoint from '../checkpoint/checkpoint';
-import './form.css';
+import React, { Component } from "react";
+import Checkpoint from "../checkpoint/checkpoint";
+import "./form.css";
 
 class Form extends Component {
-    constructor(props) {
-        super(props);
-    
-        this.state = {
-          newUser: {
-            name: '',
-            email: '',
-            age: '',
-            gender: '',
-            expertise: '',
-            about: ''
-    
-          },
-    
-          genderOptions: ['Male', 'Female', 'Others'],
-          skillOptions: ['Programming', 'Development', 'Design', 'Testing']
-    
-        }
-        this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.handleClearForm = this.handleClearForm.bind(this);
-      }
-    
-      /* This life cycle hook gets executed when the component mounts */
-    
-      handleFormSubmit() {
-        // Form submission logic
-      }
-      handleClearForm() {
-        // Logic for resetting the form
-      }
+  state = {
+    checkpoints: [""],
+  };
 
-      addCheckpoint = () => {
-        let checkpoint = document.createElement("INPUT");
-        let checkpoints = document.getElementsByClassName("checkpoint");
-        checkpoint.id = "checkpoint" + (checkpoints.length + 1);
-        checkpoint.className = "form-control checkpoint"
-        checkpoint.placeholder = "Address "
-        checkpoints[0].parentNode.insertBefore(checkpoint, checkpoints[checkpoints.length - 1].nextSibling);
-      }
-    
-      removeCheckpoint = () => {
-        let checkpoints = document.getElementsByClassName("checkpoint");
-        console.log(checkpoints);
-        if (checkpoints.length > 1) {
-          document.getElementById(checkpoints[checkpoints.length - 1].id).remove();
-        } else {
-          alert("You cannot remove the only checkpoint")
-        }
-      }
-    
-      render() {
-        return (
-            <div>
-                <form action="/">
-                <div className="form-group">
-                    <label for="start">Start</label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    id="start"
-                    name="start"
-                    placeholder="Address"
-                    />
+  handleChange(e, index) {
+    this.state.checkpoints[index] = e.target.value;
+    this.setState({ checkpoints: this.state.checkpoints });
+  }
+
+  handleRemove(index) {
+    this.state.checkpoints.splice(index, 1);
+    console.log(this.state.checkpoints, "$$");
+    this.setState({ checkpoints: this.state.checkpoints });
+  }
+
+  handleSubmit(event) {
+    console.log("An essay was submitted: " + this.state.checkpoints);
+    event.preventDefault();
+  }
+
+  addCheckpoint() {
+    // State change will cause component re-render
+    this.setState({
+      checkpoints: [...this.state.checkpoints, ""],
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <form
+          onSubmit={(e) => {
+            this.handleSubmit(e);
+          }}
+        >
+          <div className="form-group">
+            <label htmlFor="start">Start</label>
+            <input
+              type="text"
+              className="form-control"
+              id="start"
+              name="start"
+              placeholder="Address"
+            />
+          </div>
+          <div id="checkpoints" className="form-group">
+            <label htmlFor="checkpoint0">Checkpoint</label>
+            {this.state.checkpoints.map((address, index) => {
+              return (
+                <div key={index}>
+                  <Checkpoint
+                    address={address}
+                    index={index}
+                    onChange={(e) => {
+                      this.handleChange(e, index);
+                    }}
+                    remove={(e) => {
+                      this.handleRemove(index);
+                    }}
+                  />
                 </div>
-                <Checkpoint number={1}/>
-                <div className="form-group">
-                    <label for="finish">Finish</label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    id="finish"
-                    name="finish"
-                    placeholder="Address"
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">Submit</button>
-                </form>
+              );
+            })}
+          </div>
+          <div className="form-group">
+            <label htmlFor="finish">Finish</label>
+            <input
+              type="text"
+              className="form-control"
+              id="finish"
+              name="finish"
+              placeholder="Address"
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </form>
 
-                <button onclick="addCheckpoint()">Add</button>
-                <button onclick="removeCheckpoint()">Remove</button>
-
-            </div>
-        );
-      }
-    }
-
+        <button
+          type="button"
+          onClick={(e) => {
+            this.addCheckpoint(e);
+          }}
+        >
+          Add
+        </button>
+      </div>
+    );
+  }
+}
 export default Form;

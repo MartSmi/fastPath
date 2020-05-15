@@ -5,20 +5,30 @@ class Checkpoint extends Component {
     super(props);
 
     this.state = {
-      checkpoint_name: "checkpoint" + this.props.number
+      name: "checkpoint" + this.props.index,
     };
   }
   render() {
     return (
-      <div className="form-group">
-        <label for={this.state.checkpoint_name}>Checkpoint</label>
+      <div>
         <input
           type="text"
           className="form-control checkpoint"
           id="checkpoint"
-          name={this.state.checkpoint_name}
+          name={this.state.name}
           placeholder="Address"
+          onChange={this.props.onChange}
+          value={this.props.address}
         />
+        {(() => {
+          if (this.props.index != 0) {
+            return (
+              <button type="button" onClick={this.props.remove}>
+                Remove
+              </button>
+            );
+          }
+        })()}
       </div>
     );
   }

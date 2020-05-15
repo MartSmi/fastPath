@@ -6,12 +6,12 @@ function App() {
   return (
     <div className="App">
       <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-          <a class="navbar-brand" href="#">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+          <a className="navbar-brand" href="#">
             FastPath
           </a>
           <button
-            class="navbar-toggler"
+            className="navbar-toggler"
             type="button"
             data-toggle="collapse"
             data-target="#navbarNav"
@@ -19,22 +19,22 @@ function App() {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item active">
+                <a className="nav-link" href="#">
                   Main
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./about.html">
+              <li className="nav-item">
+                <a className="nav-link" href="./about.html">
                   About
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./contacts.html">
+              <li className="nav-item">
+                <a className="nav-link" href="./contacts.html">
                   Contacts
                 </a>
               </li>
