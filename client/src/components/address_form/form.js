@@ -4,12 +4,23 @@ import "./form.css";
 
 class Form extends Component {
   state = {
+    start: "",
     checkpoints: [""],
+    end: "",
   };
 
-  handleChange(e, index) {
-    this.state.checkpoints[index] = e.target.value;
-    this.setState({ checkpoints: this.state.checkpoints });
+  changeStart(e) {
+    this.setState({ start: e.target.value });
+  }
+
+  changeEnd(e) {
+    this.setState({ end: e.target.value });
+  }
+
+  changeCheckpoint(e, index) {
+    let tmp = this.state.checkpoints;
+    tmp[index] = e.target.value;
+    this.setState({ checkpoints: tmp });
   }
 
   handleRemove(index) {
@@ -19,7 +30,18 @@ class Form extends Component {
   }
 
   handleSubmit(event) {
-    console.log("An essay was submitted: " + this.state.checkpoints);
+    fetch("/api/users/register", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(this.state),
+    })
+      .then((result) => result.json())
+      .then((info) => {
+        console.log(info);
+      });
     event.preventDefault();
   }
 
@@ -46,6 +68,9 @@ class Form extends Component {
               id="start"
               name="start"
               placeholder="Address"
+              onChange={(e) => {
+                this.changeStart(e);
+              }}
             />
           </div>
           <div id="checkpoints" className="form-group">
@@ -57,7 +82,7 @@ class Form extends Component {
                     address={address}
                     index={index}
                     onChange={(e) => {
-                      this.handleChange(e, index);
+                      this.changeCheckpoint(e, index);
                     }}
                     remove={(e) => {
                       this.handleRemove(index);
@@ -75,6 +100,9 @@ class Form extends Component {
               id="finish"
               name="finish"
               placeholder="Address"
+              onChange={(e) => {
+                this.changeEnd(e);
+              }}
             />
           </div>
           <button type="submit" className="btn btn-primary">

@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import Addresses_form from "./components/address_form/form";
+import AddressesForm from "./components/address_form/form";
 
 function App() {
   return (
@@ -42,7 +42,7 @@ function App() {
           </div>
         </nav>
       </header>
-      <Addresses_form />
+      <AddressesForm />
     </div>
   );
 }

@@ -21,7 +21,7 @@ class Checkpoint extends Component {
           value={this.props.address}
         />
         {(() => {
-          if (this.props.index != 0) {
+          if (this.props.index !== 0) {
             return (
               <button type="button" onClick={this.props.remove}>
                 Remove
