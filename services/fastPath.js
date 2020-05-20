@@ -6,8 +6,7 @@ const path = require("path");
 const addresses = require("../addresses.json");
 
 const { matrixKey } = require("../config/config");
-console.log(matrixKey);
-
+    
 const elem_limit = 25; //half element limit
 
 function fetchJSON(url) {

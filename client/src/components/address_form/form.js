@@ -1,12 +1,21 @@
 import React, { Component } from "react";
 import Checkpoint from "../checkpoint/checkpoint";
 import "./form.css";
+import Grid from '@material-ui/core/Grid'
+import PlacesAutocomplete from "react-places-autocomplete";
 
 class Form extends Component {
   state = {
     start: "",
-    checkpoints: [""],
+    checkpoints: ["", ""],
     end: "",
+  };
+  //Places autocomplete
+  changeCheckpoint = (address, index) => {
+    console.log(address, index);
+    let checkpoints = this.state.checkpoints;
+    checkpoints[index] = address;
+    this.setState({ checkpoints });
   };
 
   changeStart(e) {
@@ -15,12 +24,6 @@ class Form extends Component {
 
   changeEnd(e) {
     this.setState({ end: e.target.value });
-  }
-
-  changeCheckpoint(e, index) {
-    let tmp = this.state.checkpoints;
-    tmp[index] = e.target.value;
-    this.setState({ checkpoints: tmp });
   }
 
   handleRemove(index) {
@@ -51,11 +54,63 @@ class Form extends Component {
       checkpoints: [...this.state.checkpoints, ""],
     });
   }
-
+  
   render() {
     return (
       <div>
-        <form
+        {
+          this.state.checkpoints.map((address, index) => {
+            return (
+              <div key={index}>
+                <PlacesAutocomplete
+                  value={address}
+                  onChange={(address) => {this.changeCheckpoint(address, index)}}
+                  onSelect={this.handleSelect}
+                  >
+                    {({
+                      getInputProps,
+                      suggestions,
+                      getSuggestionItemProps,
+                      loading,
+                    }) => (
+                      <div>
+                        <input
+                          {...getInputProps({
+                            placeholder: "Search Places ...",
+                            className: "location-search-input",
+                          })}
+                        />
+                        <div className="autocomplete-dropdown-container">
+                          {loading && <div>Loading...</div>}
+                          {suggestions.map((suggestion) => {
+                            const className = suggestion.active
+                              ? "suggestion-item--active"
+                              : "suggestion-item";
+                            // inline style for demonstration purpose
+                            const style = suggestion.active
+                              ? { backgroundColor: "#fafafa", cursor: "pointer" }
+                              : { backgroundColor: "#ffffff", cursor: "pointer" };
+                            return (
+                              <div
+                                {...getSuggestionItemProps(suggestion, {
+                                  className,
+                                  style,
+                                })}
+                              >
+                                <span>{suggestion.description}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </PlacesAutocomplete>
+              </div>
+            )
+          })
+        }
+        {
+         <form
           onSubmit={(e) => {
             this.handleSubmit(e);
           }}
@@ -108,7 +163,7 @@ class Form extends Component {
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
-        </form>
+        </form> }
 
         <button
           type="button"
