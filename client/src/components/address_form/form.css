@@ -1,15 +1,37 @@
-form {
-    width: 40%;
+#form {
+  position: relative;
+  margin-top: 2%;
+  left: 30%;
+  width: 40%;
 }
-  
+
 label {
-    position: relative;
+  position: relative;
 }
-  
-input {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    position: relative
+
+.input {
+  position: relative;
+  left: 0;
+  width: 90%;
+  box-sizing: border-box;
 }
+
+.input-line {
+  width: 100%;
+  margin-bottom: 2%;
+}
+.button-add {
+  position: relative;
+  top: 0;
+  right: 0;
+}
+/*
+.checkpoint {
+  position: relative;
+  left: 0;
+  width: 90%;
+}
+.checkpoint-close {
+  position: relative;
+  right: 0;
+} */

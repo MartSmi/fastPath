@@ -2,11 +2,8 @@ const https = require("https");
 const fs = require("fs");
 const fetch = require("node-fetch");
 const path = require("path");
-
-const addresses = require("../addresses.json");
-
+const formParser = require("./formParser");
 const { matrixKey } = require("../config/config");
-console.log(matrixKey);
 
 const elem_limit = 25; //half element limit
 
@@ -18,7 +15,14 @@ function fetchJSON(url) {
     .catch((err) => console.log(err));
 }
 
-async function getDistances() {
+exports.start = async function generateDirections(req) {
+  //Parses form data
+  addresses = await formParser(req);
+  console.log(addresses);
+
+  //  getDistances(addresses);
+};
+async function getDistances(addresses) {
   console.log("getDistances");
   var max = addresses.street.length - 1;
   var amount = Math.ceil(max / elem_limit);
@@ -174,4 +178,3 @@ function shortUrl(url) {
       Swap P[x] and P[y].
       Reverse P[x+1 .. n].
   */
-exports.getDistances = getDistances;
