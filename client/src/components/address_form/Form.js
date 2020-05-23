@@ -25,6 +25,8 @@ class Form extends Component {
   }
 
   handleSubmit(event) {
+    console.log(this.state);
+
     fetch("/api/users/register", {
       method: "POST",
       headers: {

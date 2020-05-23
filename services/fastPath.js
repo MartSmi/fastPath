@@ -3,15 +3,16 @@ const fs = require("fs");
 const fetch = require("node-fetch");
 const path = require("path");
 const formParser = require("./formParser");
-const { matrixKey } = require("../config/config");
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> 1f1d4965e24f3f9f747219f146c9184a607eee64
+const { google_api_key } = require("../config/config");
 const elem_limit = 25; //half element limit
 
+let start;
+let finish;
+let addresses;
+
 function fetchJSON(url) {
+  console.log(url);
+
   url = new URL(url);
   //  console.time(url);
   return fetch(url)
@@ -21,34 +22,38 @@ function fetchJSON(url) {
 
 exports.start = async function generateDirections(req) {
   //Parses form data
-  addresses = await formParser(req);
-  console.log(addresses);
+  tmp = await formParser(req);
+  addresses = tmp.waypoints;
+  start = tmp.start;
+  finish = tmp.finish;
+  //  console.log(addresses);
 
-  //  getDistances(addresses);
+  return Promise.resolve(getDistances(addresses));
 };
+
 async function getDistances(addresses) {
   console.log("getDistances");
-  var max = addresses.street.length - 1;
+  var max = addresses.length - 1;
   var amount = Math.ceil(max / elem_limit);
   let urls = new Array();
   let maxi = elem_limit;
   if (maxi > max) maxi = max;
 
   for (let n = 0; n < max; n++) {
-    var origin = `${addresses.street[n]}+${addresses.town}+${addresses.country}`;
+    var origin = `${addresses[n][0].latitude},${addresses[n][0].longitude}`;
     var destinations = "";
     for (let x = 0; x < amount; x++) {
       for (let m = x * elem_limit; m < (x + 1) * maxi; m++) {
         if (m == max - 1) {
-          destinations += `${addresses.street[m + 1]}+${addresses.town}+${
-            addresses.country
+          destinations += `${addresses[m + 1][0].latitude},${
+            addresses[m + 1][0].longitude
           }`;
         } else if (n != m) {
-          destinations += `${addresses.street[m]}+${addresses.town}+${addresses.country}|`;
+          destinations += `${addresses[m][0].latitude},${addresses[m][0].longitude}|`;
         }
       }
-      var url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destinations}&key=${matrix_key}`;
-      url = url.replace(/\s/g, "+");
+      var url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destinations}&key=${google_api_key}`;
+      //      url = url.replace(/\s/g, "+");
       urls.push(url);
     }
   }
@@ -70,7 +75,6 @@ function findFastest(responses) {
     if (n < responses.length - 1) {
       order.push(n);
     }
-    console.log(responses);
 
     for (
       var m = 0, mf = 0;
@@ -131,36 +135,37 @@ function findFastest(responses) {
 
 function getDirections(path) {
   var adr = `https://www.google.com/maps/dir/${
-    addresses.street[addresses.street.length - 2]
-  }+${addresses.town}+${addresses.country}`;
-  for (var n = 0; n < path.length; n++) {
-    adr += `/${addresses.street[path[n]]}+${addresses.town}+${
-      addresses.country
-    }`;
-  }
-  adr += `/${addresses.street[addresses.street.length - 1]}+${addresses.town}+${
-    addresses.country
+    addresses[addresses.length - 2][0].formattedAddress
   }`;
+  for (var n = 0; n < path.length; n++) {
+    adr += `/${addresses[path[n]][0].formattedAddress}`;
+  }
+  adr += `/${addresses[addresses.length - 1][0].formattedAddress}`;
   adr = adr.replace(/\s/g, "+");
+
   return shortUrl(adr);
 }
 
 function shortUrl(url) {
   https
     .get(
-      `https://www.google.com/maps/rpc/shorturl?authuser=0&hl=lt&gl=lt&pb=!1s${url}`,
+      `https://www.google.com/maps/rpc/shorturl?authuser=0&hl=lt&gl=lt&pb=!1s${encodeURIComponent(
+        url
+      )}`,
       (res) => {
         let data = "";
 
-        // A chunk of data has been recieved.
+        // A chunk of data has been received.
         res.on("data", (chunk) => {
           data += chunk;
         });
 
-        // The whole response has been received. Print out the result.
-        var jsop = JSON.parse(data.replace(")]}'", ""));
-        console.log(jsop[0]);
-        return jsop[0];
+        res.on("end", () => {
+          // The whole response has been received. Print out the result.
+          var jsop = JSON.parse(data.replace(")]}'", ""));
+          console.log(jsop[0]);
+          return jsop[0];
+        });
       }
     )
     .on("error", (err) => {

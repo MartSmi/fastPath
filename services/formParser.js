@@ -1,32 +1,38 @@
 const geocode = require("./geocode");
 
 module.exports = async (req_body) => {
-  let waypoints = {
-    start: null,
-    checkpoints: [null],
-    finish: null,
-  };
+  let waypoints = [];
+  let start = true;
+  let finish = true;
+  //checkpoints
+  await req_body["checkpoints"].map(async (address, index) => {
+    if (typeof address["description"] == "undefined") {
+      waypoints.push(await geocode(address));
+    } else {
+      waypoints.push(await geocode(address["description"]));
+    }
+  });
 
   //start
   if (req_body["start"] != null) {
-    waypoints["start"] = await geocode.geocode(
-      req_body["start"]["description"]
-    );
+    if (typeof req_body["start"]["description"] == "undefined") {
+      waypoints.push(await geocode(req_body["start"]));
+    } else {
+      waypoints.push(await geocode(req_body["start"]["description"]));
+    }
   } else {
+    start = false;
   }
-  //checkpoints
-  await req_body["checkpoints"].map(async (address, index) => {
-    waypoints["checkpoints"][index] = await geocode.geocode(
-      address["description"]
-    );
-  });
 
   //finish
   if (req_body["finish"] != null) {
-    waypoints["finish"] = await geocode.geocode(
-      req_body["finish"]["description"]
-    );
+    if (typeof req_body["finish"]["description"] == "undefined") {
+      waypoints.push(await geocode(req_body["finish"]));
+    } else {
+      waypoints.push(await geocode(req_body["finish"]["description"]));
+    }
   } else {
+    finish = false;
   }
-  return waypoints;
+  return { waypoints, start, finish };
 };

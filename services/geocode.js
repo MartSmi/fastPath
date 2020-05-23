@@ -8,6 +8,8 @@ const options = {
 
 const geocoder = NodeGeocoder(options);
 
-exports.geocode = async (address) => {
+module.exports = async (address) => {
+  console.log(address);
+
   return await geocoder.geocode(address);
 };
