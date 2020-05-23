@@ -11,8 +11,6 @@ let finish;
 let addresses;
 
 function fetchJSON(url) {
-  console.log(url);
-
   url = new URL(url);
   //  console.time(url);
   return fetch(url)
@@ -20,19 +18,19 @@ function fetchJSON(url) {
     .catch((err) => console.log(err));
 }
 
-exports.start = async function generateDirections(req) {
+module.exports = async (req) => {
   //Parses form data
   tmp = await formParser(req);
   addresses = tmp.waypoints;
   start = tmp.start;
   finish = tmp.finish;
-  //  console.log(addresses);
-
-  return Promise.resolve(getDistances(addresses));
+  console.log("addresses1");
+  let ret = await getDistances(addresses);
+  console.log("addresses2");
+  return ret;
 };
 
 async function getDistances(addresses) {
-  console.log("getDistances");
   var max = addresses.length - 1;
   var amount = Math.ceil(max / elem_limit);
   let urls = new Array();
@@ -40,25 +38,24 @@ async function getDistances(addresses) {
   if (maxi > max) maxi = max;
 
   for (let n = 0; n < max; n++) {
-    var origin = `${addresses[n][0].latitude},${addresses[n][0].longitude}`;
+    var origin = `${addresses[n]}`;
     var destinations = "";
     for (let x = 0; x < amount; x++) {
       for (let m = x * elem_limit; m < (x + 1) * maxi; m++) {
         if (m == max - 1) {
-          destinations += `${addresses[m + 1][0].latitude},${
-            addresses[m + 1][0].longitude
-          }`;
+          destinations += `${addresses[m + 1]}`;
         } else if (n != m) {
-          destinations += `${addresses[m][0].latitude},${addresses[m][0].longitude}|`;
+          destinations += `${addresses[m]}|`;
         }
       }
       var url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destinations}&key=${google_api_key}`;
-      //      url = url.replace(/\s/g, "+");
+      url = url.replace(/\s/g, "+");
       urls.push(url);
     }
   }
 
   let promises = urls.map((url) => fetchJSON(url));
+
   Promise.all(promises)
     .then((responses) => {
       return findFastest(responses);
@@ -67,6 +64,8 @@ async function getDistances(addresses) {
 }
 
 function findFastest(responses) {
+  console.log("adddasdsd");
+
   var durations = new Array();
   var fastOrder = new Array();
   var order = new Array();
@@ -135,12 +134,12 @@ function findFastest(responses) {
 
 function getDirections(path) {
   var adr = `https://www.google.com/maps/dir/${
-    addresses[addresses.length - 2][0].formattedAddress
+    addresses[addresses.length - 2]
   }`;
   for (var n = 0; n < path.length; n++) {
-    adr += `/${addresses[path[n]][0].formattedAddress}`;
+    adr += `/${addresses[path[n]]}`;
   }
-  adr += `/${addresses[addresses.length - 1][0].formattedAddress}`;
+  adr += `/${addresses[addresses.length - 1]}`;
   adr = adr.replace(/\s/g, "+");
 
   return shortUrl(adr);
