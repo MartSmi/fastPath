@@ -10,7 +10,7 @@ const form = require("./api/form");
 
 app.use(bodyParser.json());
 app.use(cors());
-app.post("/api/users/register", form.post);
+app.post("/api/route", form.post);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

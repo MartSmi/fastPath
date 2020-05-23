@@ -2,8 +2,8 @@ const fastPath = require("../services/fastPath");
 
 exports.post = (req, res) => {
   fastPath(req.body)
-    .then((url) => console.log("url: " + url))
+    .then((url) => res.send(JSON.stringify(url)))
     .catch((err) => {
-      console.log("here is an error");
+      console.log(err);
     });
 };

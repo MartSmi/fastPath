@@ -1,4 +1,4 @@
-const geocode = require("./geocode");
+//const geocode = require("./geocode");
 
 module.exports = async (req_body) => {
   let waypoints = [];

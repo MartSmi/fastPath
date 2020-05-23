@@ -20,14 +20,19 @@ function fetchJSON(url) {
 
 module.exports = async (req) => {
   //Parses form data
-  tmp = await formParser(req);
+  let tmp = await formParser(req);
   addresses = tmp.waypoints;
   start = tmp.start;
   finish = tmp.finish;
-  console.log("addresses1");
-  let ret = await getDistances(addresses);
-  console.log("addresses2");
-  return ret;
+  try {
+    let distances = await getDistances(addresses);
+    let fastestOrder = await findFastest(distances);
+    let routeUrl = await getRouteUrl(fastestOrder);
+    let urlShort = await urlShortener(routeUrl);
+    return { urlShort };
+  } catch (error) {
+    return { error: "This route is not available" };
+  }
 };
 
 async function getDistances(addresses) {
@@ -54,18 +59,24 @@ async function getDistances(addresses) {
     }
   }
 
-  let promises = urls.map((url) => fetchJSON(url));
-
-  Promise.all(promises)
-    .then((responses) => {
-      return findFastest(responses);
+  let responses = await Promise.all(
+    urls.map((url) => {
+      return fetchJSON(url);
     })
-    .catch((err) => console.log(err));
+  ).catch((err) => console.log(err));
+
+  return responses;
 }
 
-function findFastest(responses) {
-  console.log("adddasdsd");
-
+/*
+      Explanation of findFastest
+      Find the largest x such that P[x]<P[x+1].
+      (If there is no such x, P is the last permutation.)
+      Find the largest y such that P[x]<P[y].
+      Swap P[x] and P[y].
+      Reverse P[x+1 .. n].
+  */
+async function findFastest(responses) {
   var durations = new Array();
   var fastOrder = new Array();
   var order = new Array();
@@ -87,7 +98,7 @@ function findFastest(responses) {
   //  console.log(durations);
   var fastest = 999999999;
   let r = 0;
-  console.time("main");
+  // console.time("main");
   while (true) {
     r++;
     var largestX = -1;
@@ -126,13 +137,12 @@ function findFastest(responses) {
     tmpArray.reverse();
     order = order.concat(tmpArray);
   }
-  console.timeEnd("main");
-  console.log(r);
-  console.log("fastOrder: " + fastOrder);
-  return getDirections(fastOrder);
+  // console.timeEnd("main");
+  // console.log("fastOrder: " + fastOrder);
+  return fastOrder;
 }
 
-function getDirections(path) {
+function getRouteUrl(path) {
   var adr = `https://www.google.com/maps/dir/${
     addresses[addresses.length - 2]
   }`;
@@ -142,47 +152,33 @@ function getDirections(path) {
   adr += `/${addresses[addresses.length - 1]}`;
   adr = adr.replace(/\s/g, "+");
 
-  return shortUrl(adr);
+  return adr;
 }
 
-function shortUrl(url) {
-  https
-    .get(
-      `https://www.google.com/maps/rpc/shorturl?authuser=0&hl=lt&gl=lt&pb=!1s${encodeURIComponent(
-        url
-      )}`,
-      (res) => {
-        let data = "";
+async function urlShortener(url) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(
+        `https://www.google.com/maps/rpc/shorturl?authuser=0&hl=lt&gl=lt&pb=!1s${encodeURIComponent(
+          url
+        )}`,
+        (res) => {
+          let data = "";
 
-        // A chunk of data has been received.
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
+          // A chunk of data has been received.
+          res.on("data", (chunk) => {
+            data += chunk;
+          });
 
-        res.on("end", () => {
-          // The whole response has been received. Print out the result.
-          var jsop = JSON.parse(data.replace(")]}'", ""));
-          console.log(jsop[0]);
-          return jsop[0];
-        });
-      }
-    )
-    .on("error", (err) => {
-      console.log("Error: " + err.message);
-    });
+          res.on("end", () => {
+            // Google gives back a badly fomated json so delete )]}'
+            resolve(JSON.parse(data.replace(")]}'", ""))[0]);
+          });
+        }
+      )
+      .on("error", (err) => {
+        console.log("Error: " + err.message);
+        reject(err);
+      });
+  });
 }
-
-//getLocations();
-
-//getDistances(); this is the deal
-
-//var data = getDistances();
-//var path = findFastest(getDistances());
-//console.log(getDistances());
-/*
-      Find the largest x such that P[x]<P[x+1].
-      (If there is no such x, P is the last permutation.)
-      Find the largest y such that P[x]<P[y].
-      Swap P[x] and P[y].
-      Reverse P[x+1 .. n].
-  */

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./form.css";
-import Autocomplete from "../autocomplete/Autocomplete";
+import Autocomplete from "./autocomplete/Autocomplete";
 
 class Form extends Component {
   state = {
@@ -25,9 +25,7 @@ class Form extends Component {
   }
 
   handleSubmit(event) {
-    console.log(this.state);
-
-    fetch("/api/users/register", {
+    fetch("/api/route", {
       method: "POST",
       headers: {
         Accept: "application/json",
