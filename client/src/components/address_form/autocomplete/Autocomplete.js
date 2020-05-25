@@ -7,7 +7,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import parse from "autosuggest-highlight/parse";
 import throttle from "lodash/throttle";
-const api_key = "AIzaSyBqT6coSPD1gBgflK-dUj_Ct-uGR8YEvbQ";
 
 function loadScript(src, position, id) {
   if (!position) {
@@ -40,7 +39,7 @@ export default function GoogleMaps(props) {
     if (!document.querySelector("#google-maps")) {
       loadScript(
         "https://maps.googleapis.com/maps/api/js?key=" +
-          api_key +
+          process.env.REACT_APP_GOOGLE_API_KEY +
           "&libraries=places",
         document.querySelector("head"),
         "google-maps"

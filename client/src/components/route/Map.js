@@ -1,42 +1,53 @@
-import React, { Component } from "react";
-import GoogleMapReact from "google-map-react";
+import React from "react";
+import {
+  GoogleMap,
+  useLoadScript,
+  DirectionsRenderer,
+} from "@react-google-maps/api";
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+const libraries = ["places"];
 
-class Map extends Component {
-  static defaultProps = {
-    mapStyle: {
-      position: "relative",
-      left: "7%",
-      top: "5vh",
-      height: "70vh",
-      width: "65%",
-    },
-    center: {
-      lat: 59.95,
-      lng: 30.33,
-    },
-    zoom: 11,
+const options = {
+  disableDefaultUI: true,
+  zoomControl: true,
+};
+
+export default function GoogleMapWorks(props) {
+  const mapContainerStyle = {
+    position: "relative",
+    top: "5vh",
+    left: "4vw",
+    height: "75vh",
+    width: "68vw",
   };
 
-  render() {
-    return (
-      // Important! Always set the container height explicitly
-      <div style={this.props.mapStyle}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: "AIzaSyBqT6coSPD1gBgflK-dUj_Ct-uGR8YEvbQ" }}
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
-        >
-          <AnyReactComponent
-            lat={59.955413}
-            lng={30.337844}
-            text="My Waypoint"
-          />
-        </GoogleMapReact>
-      </div>
-    );
-  }
-}
+  const center = {
+    lat: props.lat || 54.687157,
+    lng: props.lng || 25.279652,
+  };
 
-export default Map;
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+    //    libraries,
+  });
+
+  console.log("Map");
+
+  if (loadError) return "Error loading maps";
+  if (!isLoaded) return "Loading Maps";
+
+  return (
+    <div>
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        zoom={8}
+        center={center}
+        options={options}
+      >
+        {props.directions && (
+          <DirectionsRenderer directions={props.directions} />
+        )}
+      </GoogleMap>
+    </div>
+  );
+}

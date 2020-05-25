@@ -6,8 +6,8 @@ const formParser = require("./formParser");
 const { google_api_key } = require("../config/config");
 const elem_limit = 25; //half element limit
 
-let start;
-let finish;
+let origin;
+let destination;
 let addresses;
 
 function fetchJSON(url) {
@@ -22,16 +22,17 @@ module.exports = async (req) => {
   //Parses form data
   let tmp = await formParser(req);
   addresses = tmp.waypoints;
-  start = tmp.start;
-  finish = tmp.finish;
+  origin = tmp.origin;
+  destination = tmp.destination;
   try {
     let distances = await getDistances(addresses);
     let fastestOrder = await findFastest(distances);
-    let routeUrl = await getRouteUrl(fastestOrder);
+    let fastestRoute = formatRoute(fastestOrder);
+    let routeUrl = getRouteUrl(fastestOrder);
     let urlShort = await urlShortener(routeUrl);
-    return { urlShort };
+    return { urlShort, fastestRoute };
   } catch (error) {
-    return { error: "This route is not available" };
+    throw "This route is not available";
   }
 };
 
@@ -103,7 +104,7 @@ async function findFastest(responses) {
     r++;
     var largestX = -1;
     var largestY;
-    //current_time = start-first_point + last_point-finish
+    //current_time = origin-first_point + last_point-destination
     var time =
       durations[durations.length - 1][order[0]] +
       durations[order[order.length - 1]][durations.length - 1];
@@ -142,6 +143,16 @@ async function findFastest(responses) {
   return fastOrder;
 }
 
+function formatRoute(path) {
+  let route = [];
+  route.push(addresses[addresses.length - 2]);
+  path.map((index) => {
+    route.push(addresses[index]);
+  });
+  route.push(addresses[addresses.length - 1]);
+  return route;
+}
+
 function getRouteUrl(path) {
   var adr = `https://www.google.com/maps/dir/${
     addresses[addresses.length - 2]
@@ -171,7 +182,7 @@ async function urlShortener(url) {
           });
 
           res.on("end", () => {
-            // Google gives back a badly fomated json so delete )]}'
+            // Google gives back a badly formatted json so delete )]}'
             resolve(JSON.parse(data.replace(")]}'", ""))[0]);
           });
         }

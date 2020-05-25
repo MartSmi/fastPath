@@ -2,10 +2,10 @@
 
 module.exports = async (req_body) => {
   let waypoints = [];
-  let start = true;
-  let finish = true;
-  //checkpoints
-  await req_body["checkpoints"].map(async (address, index) => {
+  let origin = true;
+  let destination = true;
+  //waypoints
+  await req_body["waypoints"].map(async (address, index) => {
     if (typeof address["description"] == "undefined") {
       waypoints.push(address);
     } else {
@@ -13,26 +13,26 @@ module.exports = async (req_body) => {
     }
   });
 
-  //start
-  if (req_body["start"] != null) {
-    if (typeof req_body["start"]["description"] == "undefined") {
-      waypoints.push(req_body["start"]);
+  //origin
+  if (req_body["origin"] != null) {
+    if (typeof req_body["origin"]["description"] == "undefined") {
+      waypoints.push(req_body["origin"]);
     } else {
-      waypoints.push(req_body["start"]["description"]);
+      waypoints.push(req_body["origin"]["description"]);
     }
   } else {
-    start = false;
+    origin = false;
   }
 
-  //finish
-  if (req_body["finish"] != null) {
-    if (typeof req_body["finish"]["description"] == "undefined") {
-      waypoints.push(req_body["finish"]);
+  //destination
+  if (req_body["destination"] != null) {
+    if (typeof req_body["destination"]["description"] == "undefined") {
+      waypoints.push(req_body["destination"]);
     } else {
-      waypoints.push(req_body["finish"]["description"]);
+      waypoints.push(req_body["destination"]["description"]);
     }
   } else {
-    finish = false;
+    destination = false;
   }
-  return { waypoints, start, finish };
+  return { waypoints, origin, destination };
 };

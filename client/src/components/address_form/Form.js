@@ -3,25 +3,28 @@ import "./form.css";
 import Autocomplete from "./autocomplete/Autocomplete";
 
 class Form extends Component {
-  state = {
-    start: "",
-    checkpoints: ["", ""],
-    finish: "",
-  };
-
-  changeCheckpoint = (address, index) => {
-    console.log(address, index);
-    let checkpoints = this.state.checkpoints;
-    checkpoints[index] = address;
-    this.setState({ checkpoints });
-  };
-
-  changeStart(v) {
-    this.setState({ start: v });
+  constructor(props) {
+    super(props);
+    this.state = {
+      origin: "Vilnius, Lithuania",
+      waypoints: ["Klaipėda, Lithuania", "Panemunė, Lithuania"],
+      destination: "Kaunas, Lithuania",
+    };
   }
 
-  changeFinish(v) {
-    this.setState({ finish: v });
+  changeWaypoint = (address, index) => {
+    let waypoints = this.state.waypoints;
+    waypoints[index] = address;
+    this.setState({ waypoints });
+    console.log(this.state);
+  };
+
+  changeOrigin(v) {
+    this.setState({ origin: v });
+  }
+
+  changeDestination(v) {
+    this.setState({ destination: v });
   }
 
   handleSubmit(event) {
@@ -33,30 +36,39 @@ class Form extends Component {
       },
       body: JSON.stringify(this.state),
     })
-      .then((result) => result.json())
-      .then((info) => {
-        console.log(info);
-      });
+      .then((response) => {
+        // this.props.result = result;
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw new Error("Bad response: " + response);
+        }
+      })
+      .then((data) => {
+        this.props.onRouteDataResponse(data);
+        this.props.history.push("/route");
+      })
+      .catch((error) => console.log(error));
     event.preventDefault();
   }
 
-  removeCheckpoint(index) {
-    let checkpoints = this.state.checkpoints;
-    checkpoints.splice(index, 1);
-    this.setState({ checkpoints });
+  removeWaypoint(index) {
+    let waypoints = this.state.waypoints;
+    waypoints.splice(index, 1);
+    this.setState({ waypoints });
   }
 
-  addCheckpoint() {
+  addWaypoint() {
     // State change will cause component re-render
     this.setState({
-      checkpoints: [...this.state.checkpoints, ""],
+      waypoints: [...this.state.waypoints, ""],
     });
   }
 
   render() {
-    let label_checkpoints;
-    if (this.state.checkpoints.length >= 1) {
-      label_checkpoints = <label htmlFor="checkpoint0">Checkpoints</label>;
+    let label_waypoints;
+    if (this.state.waypoints.length >= 1) {
+      label_waypoints = <label htmlFor="waypoint0">Waypoints</label>;
     }
 
     let button_add = (onClick) => {
@@ -85,21 +97,21 @@ class Form extends Component {
       );
     };
 
-    let start_part = () => {
-      if (this.state.start !== null) {
+    let origin_part = () => {
+      if (this.state.origin !== null) {
         return (
           <div className="form-group">
-            <label htmlFor="start">Start</label>
+            <label htmlFor="origin">Origin</label>
             <div className="input-line row">
               <div className="col">
                 <Autocomplete
-                  placeholder="Start address"
-                  onChange={(v) => this.changeStart(v)}
-                  value={this.state.start}
+                  placeholder="Origin address"
+                  onChange={(v) => this.changeOrigin(v)}
+                  value={this.state.origin}
                 />
               </div>
               {button_close(() => {
-                this.changeStart(null);
+                this.changeOrigin(null);
               })}
             </div>
           </div>
@@ -108,27 +120,27 @@ class Form extends Component {
         return (
           <div className="form-group">
             {button_add(() => {
-              this.changeStart("");
+              this.changeOrigin("");
             })}
           </div>
         );
       }
     };
 
-    let finish_part = () => {
-      if (this.state.finish !== null) {
+    let destination_part = () => {
+      if (this.state.destination !== null) {
         return (
           <div className="form-group">
-            <label htmlFor="finish">Finish</label>
+            <label htmlFor="destination">Destination</label>
             <div className="input-line row">
               <div className="col">
                 <Autocomplete
-                  placeholder="Finish address"
-                  onChange={(v) => this.changeFinish(v)}
-                  value={this.state.finish}
+                  placeholder="Destination address"
+                  onChange={(v) => this.changeDestination(v)}
+                  value={this.state.destination}
                 />
               </div>
-              {button_close(() => this.changeFinish(null))}
+              {button_close(() => this.changeDestination(null))}
             </div>
           </div>
         );
@@ -136,7 +148,7 @@ class Form extends Component {
         return (
           <div className="form-group">
             {button_add(() => {
-              this.changeFinish("");
+              this.changeDestination("");
             })}
           </div>
         );
@@ -150,31 +162,31 @@ class Form extends Component {
             this.handleSubmit(e);
           }}
         >
-          {start_part()}
-          <div id="checkpoints" className="form-group">
-            {label_checkpoints}
-            {this.state.checkpoints.map((address, index) => {
+          {origin_part()}
+          <div id="waypoints" className="form-group">
+            {label_waypoints}
+            {this.state.waypoints.map((address, index) => {
               return (
                 <div key={index} className="input-line row">
-                  <div className="checkpoint col">
+                  <div className="waypoint col">
                     <Autocomplete
-                      placeholder="Checkpoint address"
+                      placeholder="Waypoint address"
                       onChange={(v) => {
                         console.log(v);
-                        this.changeCheckpoint(v, index);
+                        this.changeWaypoint(v, index);
                       }}
                       value={address}
                     />
                   </div>
-                  {button_close(() => this.removeCheckpoint(index))}
+                  {button_close(() => this.removeWaypoint(index))}
                 </div>
               );
             })}
             {button_add((e) => {
-              this.addCheckpoint(e);
+              this.addWaypoint(e);
             })}
           </div>
-          {finish_part()}
+          {destination_part()}
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
