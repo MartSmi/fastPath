@@ -13,13 +13,22 @@ class Map extends Component {
   }
 
   mapContainerStyle = {
-    position: "relative",
-    top: "5vh",
-    left: "4vw",
-    height: "75vh",
-    width: "68vw",
+    height: "100%",
+    width: "100%",
   };
 
+  divStyle = {
+    position: "relative",
+    marginLeft: "auto",
+    marginRight: "auto",
+    height: "100%",
+    width: "100%",
+  };
+
+  options = {
+    disableDefaultUI: true,
+    zoomControl: true,
+  };
   // center = {
   //   lat: this.props.lat || 54.687157,
   //   lng: this.props.lng || 50.279652,
@@ -41,7 +50,7 @@ class Map extends Component {
     const waypoints = this.props.route.waypoints.map((address) => {
       return { location: address, stopover: true };
     });
-    console.log("this.props.route");
+    console.log("this.props.routes");
     console.log(this.props.route);
 
     directionsService.route(
@@ -66,16 +75,16 @@ class Map extends Component {
   render() {
     const GoogleMapExample = withGoogleMap((props) => (
       <GoogleMap
-      //        defaultCenter={{ lat: 40.756795, lng: -73.954298 }}
-      //        defaultZoom={13}
-      //        disableDefaultUI={true}
+        //        defaultCenter={{ lat: 40.756795, lng: -73.954298 }}
+        //        defaultZoom={13}
+        options={this.options}
       >
         <DirectionsRenderer directions={this.state.directions} />
       </GoogleMap>
     ));
 
     return (
-      <div>
+      <div style={this.divStyle}>
         <GoogleMapExample
           containerElement={<div style={this.mapContainerStyle} />}
           mapElement={<div style={{ height: `100%` }} />}

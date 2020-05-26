@@ -1,0 +1,17 @@
+body {
+  height: 100vh;
+}
+
+.container-fluid {
+  top: 0;
+  height: 90%;
+}
+
+.row {
+  margin-top: 1%;
+  height: 78%;
+}
+
+.board {
+  padding-left: 0;
+}

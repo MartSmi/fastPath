@@ -20,7 +20,7 @@ export default class App extends Component {
   }
 
   getRouteData() {
-    if (this.state.routeData == undefined) {
+    if (this.state.routeData === undefined) {
       console.log("undefined routeData");
       console.log(localStorage.getItem("routeData"));
       let item = localStorage.getItem("routeData");
