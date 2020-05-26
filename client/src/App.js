@@ -11,12 +11,23 @@ export default class App extends Component {
     this.handleRouteDataResponse = this.handleRouteDataResponse.bind(this);
     this.state = {
       user: {},
-      routeData: [],
     };
   }
 
   handleRouteDataResponse(data) {
+    localStorage.setItem("routeData", JSON.stringify(data));
     this.setState({ routeData: data });
+  }
+
+  getRouteData() {
+    if (this.state.routeData == undefined) {
+      console.log("undefined routeData");
+      console.log(localStorage.getItem("routeData"));
+      let item = localStorage.getItem("routeData");
+      return JSON.parse(item);
+    } else {
+      return this.state.routeData;
+    }
   }
 
   render() {
@@ -28,7 +39,7 @@ export default class App extends Component {
             <Route
               path="/route"
               render={(props) => (
-                <RouteMap {...props} routeData={this.state.routeData} />
+                <RouteMap {...props} routeData={this.getRouteData()} />
               )}
             ></Route>
             <Route

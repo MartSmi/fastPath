@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./route.css";
 import Map from "./Map";
-import { useLoadScript } from "@react-google-maps/api";
+import { withScriptjs } from "react-google-maps";
 class Route extends Component {
   constructor(props) {
     super(props);
@@ -10,44 +10,25 @@ class Route extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log("component did mount");
-    console.log(this.props);
-    console.log("Route did mount");
-
-    let DirectionsService = new window.google.maps.DirectionsService();
-
-    let route = this.props.routeData.fastestRoute;
-    let origin = route[0];
-    let destination = route[route.length - 1];
-    let waypoints = route.slice(1, route.length - 1);
-    waypoints = waypoints.map((point) => {
-      return { location: point };
-    });
-    DirectionsService.route(
-      {
-        origin: origin,
-        destination: destination,
-        waypoints: waypoints,
-        optimizeWaypoints: false,
-        travelMode: "DRIVING",
-      },
-      function (response, status) {
-        console.log("ran func");
-
-        if (status === "OK") {
-          console.log(response);
-
-          this.setState({ directions: response });
-        } else {
-          window.alert("Directions request failed due to " + status);
-        }
-      }.bind(this)
-    );
-  }
-
   render() {
-    return <Map directions={this.state.directions} />;
+    const TrueMap = () => {
+      const MapLoader = withScriptjs((props) => <Map {...props} />);
+      console.log("this.props.routeData.route");
+      console.log(this.props.routeData);
+
+      return (
+        <MapLoader
+          googleMapURL={
+            "https://maps.googleapis.com/maps/api/js?key=" +
+            process.env.REACT_APP_GOOGLE_API_KEY
+          }
+          loadingElement={<div style={{ height: `100%` }} />}
+          route={this.props.routeData.route}
+        />
+      );
+    };
+
+    return <TrueMap />;
   }
 }
 

@@ -30,7 +30,7 @@ module.exports = async (req) => {
     let fastestRoute = formatRoute(fastestOrder);
     let routeUrl = getRouteUrl(fastestOrder);
     let urlShort = await urlShortener(routeUrl);
-    return { urlShort, fastestRoute };
+    return { urlShort, route: fastestRoute };
   } catch (error) {
     throw "This route is not available";
   }
@@ -144,12 +144,12 @@ async function findFastest(responses) {
 }
 
 function formatRoute(path) {
-  let route = [];
-  route.push(addresses[addresses.length - 2]);
+  let route = { origin: "", waypoints: [], destination: "" };
+  route.origin = addresses[addresses.length - 2];
   path.map((index) => {
-    route.push(addresses[index]);
+    route.waypoints.push(addresses[index]);
   });
-  route.push(addresses[addresses.length - 1]);
+  route.destination = addresses[addresses.length - 1];
   return route;
 }
 
