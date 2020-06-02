@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Header() {
+export default function Header(props) {
   return (
     <header>
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -32,6 +32,18 @@ export default function Header() {
               </Link>
             </li>
           </ul>
+        </div>
+        {/* Modal */}
+
+        <div className="text-center">
+          <a
+            href=""
+            className="btn btn-default btn-rounded"
+            data-toggle="modal"
+            data-target="#modalLRForm"
+          >
+            <i class="fas fa-user mr-1" />
+          </a>
         </div>
       </nav>
     </header>

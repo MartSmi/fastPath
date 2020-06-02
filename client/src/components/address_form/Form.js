@@ -7,8 +7,10 @@ class Form extends Component {
     super(props);
     this.state = {
       origin: "Vilnius, Lithuania",
+      origin_exists: true,
       waypoints: ["Klaipėda, Lithuania", "Panemunė, Lithuania"],
       destination: "Kaunas, Lithuania",
+      destination_exists: true,
     };
   }
 
@@ -20,6 +22,9 @@ class Form extends Component {
   };
 
   changeOrigin(v) {
+    console.log("origin");
+    console.log(v);
+
     this.setState({ origin: v });
   }
 
@@ -98,7 +103,7 @@ class Form extends Component {
     };
 
     let origin_part = () => {
-      if (this.state.origin !== null) {
+      if (this.state.origin_exists) {
         return (
           <div className="form-group">
             <label htmlFor="origin">Origin</label>
@@ -111,7 +116,7 @@ class Form extends Component {
                 />
               </div>
               {button_close(() => {
-                this.changeOrigin(null);
+                this.setState({ origin_exists: false });
               })}
             </div>
           </div>
@@ -120,7 +125,7 @@ class Form extends Component {
         return (
           <div className="form-group">
             {button_add(() => {
-              this.changeOrigin("");
+              this.setState({ origin_exists: true });
             })}
           </div>
         );
@@ -128,7 +133,7 @@ class Form extends Component {
     };
 
     let destination_part = () => {
-      if (this.state.destination !== null) {
+      if (this.state.destination_exists) {
         return (
           <div className="form-group">
             <label htmlFor="destination">Destination</label>
@@ -140,7 +145,7 @@ class Form extends Component {
                   value={this.state.destination}
                 />
               </div>
-              {button_close(() => this.changeDestination(null))}
+              {button_close(() => this.setState({ destination_exists: false }))}
             </div>
           </div>
         );
@@ -148,7 +153,7 @@ class Form extends Component {
         return (
           <div className="form-group">
             {button_add(() => {
-              this.changeDestination("");
+              this.setState({ destination_exists: true });
             })}
           </div>
         );
@@ -187,7 +192,7 @@ class Form extends Component {
             })}
           </div>
           {destination_part()}
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" class="btn primary-color btn-raised">
             Submit
           </button>
         </form>

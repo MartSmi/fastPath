@@ -1,15 +1,14 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const { port, hostname } = require("./config/config");
 const fastPath = require("./services/fastPath");
 const form = require("./api/form");
-//fastPath.getDistances()
 
-app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
+
 app.post("/api/route", form.post);
 
 app.listen(port, hostname, () => {

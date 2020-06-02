@@ -6,7 +6,7 @@ export default function RouteBoard(props) {
 
     return (
       <a
-        class="list-group-item list-group-item-action"
+        class="list-group-item list-group-item-action d-flex justify-content-center"
         id="list-home-list"
         data-toggle="list"
         role="tab"

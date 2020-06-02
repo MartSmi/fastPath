@@ -3,6 +3,7 @@ import "./App.css";
 import Header from "./components/header/Header";
 import AddressForm from "./components/address_form/Form";
 import RouteMap from "./components/route/Route";
+import SignIn from "./components/signIn/SignIn";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 export default class App extends Component {
@@ -35,6 +36,7 @@ export default class App extends Component {
       <Router>
         <div className="App">
           <Header />
+          <SignIn />
           <Switch>
             <Route
               path="/route"
