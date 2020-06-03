@@ -4,6 +4,7 @@ module.exports = async (req_body) => {
   let waypoints = [];
   let origin = true;
   let destination = true;
+
   //waypoints
   await req_body["waypoints"].map(async (address, index) => {
     if (typeof address["description"] == "undefined") {

@@ -33,6 +33,7 @@ class Form extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
     fetch("/api/route", {
       method: "POST",
       headers: {
@@ -54,7 +55,6 @@ class Form extends Component {
         this.props.history.push("/route");
       })
       .catch((error) => console.log(error));
-    event.preventDefault();
   }
 
   removeWaypoint(index) {
@@ -192,7 +192,7 @@ class Form extends Component {
             })}
           </div>
           {destination_part()}
-          <button type="submit" class="btn primary-color btn-raised">
+          <button type="submit" className="btn primary-color btn-raised">
             Submit
           </button>
         </form>

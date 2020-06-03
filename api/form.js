@@ -1,6 +1,6 @@
 const fastPath = require("../services/fastPath");
 
-exports.post = (req, res) => {
+module.exports = (req, res) => {
   fastPath(req.body)
     .then((response) => {
       console.log(response);

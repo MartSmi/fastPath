@@ -4,6 +4,8 @@ import Header from "./components/header/Header";
 import AddressForm from "./components/address_form/Form";
 import RouteMap from "./components/route/Route";
 import SignIn from "./components/signIn/SignIn";
+import Routes from "./components/routes/Routes";
+import AuthHelperMethods from "./components/auth/AuthHelperMethods";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 export default class App extends Component {
@@ -11,9 +13,31 @@ export default class App extends Component {
     super(props);
     this.handleRouteDataResponse = this.handleRouteDataResponse.bind(this);
     this.state = {
-      user: {},
+      loggedIn: this.Auth.loggedIn(),
+      routes: [
+        {
+          origin: "Kaunas",
+          waypoints: ["Klaipėda", "Šiauliai"],
+          destination: "Vilnius",
+        },
+        {},
+        {},
+        {},
+        {},
+      ],
     };
   }
+  Auth = new AuthHelperMethods();
+  /* Add the following into _handleLogout*/
+  _handleLogout = () => {
+    this.Auth.logout();
+    this.props.history.replace("/");
+  };
+
+  handleLogin = () => {
+    console.log(this.Auth.loggedIn());
+    this.setState({ loggedIn: this.Auth.loggedIn() });
+  };
 
   handleRouteDataResponse(data) {
     localStorage.setItem("routeData", JSON.stringify(data));
@@ -35,8 +59,12 @@ export default class App extends Component {
     return (
       <Router>
         <div className="App">
-          <Header />
-          <SignIn />
+          <Header loggedIn={this.state.loggedIn} />
+          <Route
+            render={(props) => (
+              <SignIn {...props} handleLogin={this.handleLogin} />
+            )}
+          ></Route>
           <Switch>
             <Route
               path="/route"
@@ -52,6 +80,13 @@ export default class App extends Component {
                   {...props}
                   onRouteDataResponse={this.handleRouteDataResponse}
                 />
+              )}
+            ></Route>
+            <Route
+              exact
+              path="/routes"
+              render={(props) => (
+                <Routes {...props} routes={this.state.routes} />
               )}
             ></Route>
           </Switch>
