@@ -6,7 +6,8 @@ export default function RouteBoard(props) {
 
     return (
       <a
-        class="list-group-item list-group-item-action d-flex justify-content-center"
+        key={index}
+        className="list-group-item list-group-item-action d-flex justify-content-center"
         id="list-home-list"
         data-toggle="list"
         role="tab"
@@ -37,7 +38,7 @@ export default function RouteBoard(props) {
   };
 
   return (
-    <div class="list-group" id="list-tab" role="tablist">
+    <div className="list-group" id="list-tab" role="tablist">
       {boardRow()}
     </div>
   );

@@ -2,14 +2,31 @@ import React, { Component } from "react";
 import {
   withGoogleMap,
   GoogleMap,
+  withScriptjs,
   DirectionsRenderer,
 } from "react-google-maps";
+
 class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
       directions: null,
     };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // return true;
+    if (this.state.directions === null && nextState.directions !== null) {
+      console.log("directions === null");
+      return true;
+    } else if (nextProps.route === this.props.route) {
+      console.log("stopped a rerender");
+      return false;
+    } else {
+      console.log("bypassed");
+
+      return true;
+    }
   }
 
   mapContainerStyle = {
@@ -29,29 +46,17 @@ class Map extends Component {
     disableDefaultUI: true,
     zoomControl: true,
   };
-  // center = {
-  //   lat: this.props.lat || 54.687157,
-  //   lng: this.props.lng || 50.279652,
-  // };
 
   componentDidMount() {
     const google = window.google;
     const directionsService = new google.maps.DirectionsService();
 
-    const origin = this.props.route.origin || {
-      lat: 40.756795,
-      lng: -73.954298,
-    };
-    const destination = this.props.route.destination || {
-      lat: 41.756795,
-      lng: -78.954298,
-    };
+    const origin = this.props.route.origin;
+    const destination = this.props.route.destination;
 
     const waypoints = this.props.route.waypoints.map((address) => {
       return { location: address, stopover: true };
     });
-    console.log("this.props.routes");
-    console.log(this.props.route);
 
     directionsService.route(
       {
@@ -70,15 +75,12 @@ class Map extends Component {
         }
       }
     );
+    console.log("finally");
   }
 
   render() {
     const GoogleMapExample = withGoogleMap((props) => (
-      <GoogleMap
-        //        defaultCenter={{ lat: 40.756795, lng: -73.954298 }}
-        //        defaultZoom={13}
-        options={this.options}
-      >
+      <GoogleMap options={this.options}>
         <DirectionsRenderer directions={this.state.directions} />
       </GoogleMap>
     ));
@@ -94,4 +96,4 @@ class Map extends Component {
   }
 }
 
-export default Map;
+export default withScriptjs(Map);

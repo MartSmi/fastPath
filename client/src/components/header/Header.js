@@ -39,9 +39,20 @@ export default class Header extends Component {
         );
       }
     };
+    const myRoutes = () => {
+      if (this.props.loggedIn) {
+        return (
+          <li className="nav-item">
+            <Link className="nav-link" to="./routes">
+              My Routes
+            </Link>
+          </li>
+        );
+      }
+    };
     return (
       <header>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav className="navbar navbar-expand-md navbar-dark bg-primary">
           <Link className="navbar-brand" to="/">
             FastPath
           </Link>
@@ -63,6 +74,7 @@ export default class Header extends Component {
                 Main
               </a>
             </li> */}
+              {myRoutes()}
               <li className="nav-item">
                 <Link className="nav-link" to="./about.html">
                   About

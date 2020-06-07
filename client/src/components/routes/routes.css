@@ -2,12 +2,13 @@
   position: relative;
   height: 100%;
 }
-.card-body {
-  background-image: url("../../images/map.jpg");
+
+.card-body:hover {
+  cursor: pointer;
+  transform: scale(1.01);
 }
 
-#createRoute {
-  position: absolute;
-  top: 15%;
-  right: 5%;
+.card-body {
+  background-image: url("../../images/map.jpg");
+  transition: all 0.1s;
 }

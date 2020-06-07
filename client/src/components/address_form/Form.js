@@ -34,7 +34,7 @@ class Form extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    fetch("/api/route", {
+    fetch("/api/route/create", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -192,8 +192,8 @@ class Form extends Component {
             })}
           </div>
           {destination_part()}
-          <button type="submit" className="btn primary-color btn-raised">
-            Submit
+          <button type="submit" className="btn btn-teal btn-rounded btn-raised">
+            Generate
           </button>
         </form>
       </div>

@@ -14,17 +14,8 @@ export default class App extends Component {
     this.handleRouteDataResponse = this.handleRouteDataResponse.bind(this);
     this.state = {
       loggedIn: this.Auth.loggedIn(),
-      routes: [
-        {
-          origin: "Kaunas",
-          waypoints: ["Klaipėda", "Šiauliai"],
-          destination: "Vilnius",
-        },
-        {},
-        {},
-        {},
-        {},
-      ],
+      routes: [],
+      selectedRoute: null,
     };
   }
   Auth = new AuthHelperMethods();
@@ -40,11 +31,18 @@ export default class App extends Component {
   };
 
   handleRouteDataResponse(data) {
-    localStorage.setItem("routeData", JSON.stringify(data));
-    this.setState({ routeData: data });
+    console.log(data);
+
+    localStorage.setItem("routeData", JSON.stringify(data.route));
+    this.setState({ routeData: data.route });
   }
 
   getRouteData() {
+    console.log(this.state.selectedRoute);
+
+    if (this.state.selectedRoute !== null) {
+      return this.state.selectedRoute;
+    }
     if (this.state.routeData === undefined) {
       console.log("undefined routeData");
       console.log(localStorage.getItem("routeData"));
@@ -86,7 +84,7 @@ export default class App extends Component {
               exact
               path="/routes"
               render={(props) => (
-                <Routes {...props} routes={this.state.routes} />
+                <Routes {...props} viewRoute={this.handleRouteDataResponse} />
               )}
             ></Route>
           </Switch>

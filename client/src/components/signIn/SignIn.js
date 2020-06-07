@@ -138,9 +138,6 @@ class SignIn extends Component {
                           className="form-control"
                           id="loginEmail"
                         />
-                        <span className="bmd-help">
-                          We'll never share your email with anyone else.
-                        </span>
                       </fieldset>
 
                       <fieldset className="form-group">
@@ -221,9 +218,6 @@ class SignIn extends Component {
                           className="form-control"
                           id="registerEmail"
                         />
-                        <span className="bmd-help">
-                          We'll never share your email with anyone else.
-                        </span>
                       </fieldset>
 
                       <fieldset className="form-group">

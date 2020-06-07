@@ -41,6 +41,7 @@ export default function withAuth(AuthComponent) {
           return (
             /* component that is currently being wrapper(App.js) */
             <AuthComponent
+              viewRoute={this.props.viewRoute}
               routes={this.props.routes}
               history={this.props.history}
               confirm={this.state.confirm}

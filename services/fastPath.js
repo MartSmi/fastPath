@@ -30,7 +30,8 @@ module.exports = async (req) => {
     let fastestRoute = formatRoute(fastestOrder);
     let routeUrl = getRouteUrl(fastestOrder);
     let urlShort = await urlShortener(routeUrl);
-    return { urlShort, route: fastestRoute };
+    fastestRoute.urlShort = urlShort;
+    return { route: fastestRoute };
   } catch (error) {
     throw "This route is not available";
   }

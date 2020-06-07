@@ -15,3 +15,7 @@ body {
 .board {
   padding-left: 0;
 }
+
+#mapHolder {
+  height: 100%;
+}
