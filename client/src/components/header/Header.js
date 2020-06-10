@@ -28,6 +28,7 @@ export default class Header extends Component {
         return (
           <div className="text-center">
             <a
+              id="loginAccount"
               href=""
               className="btn btn-default btn-rounded"
               data-toggle="modal"
@@ -52,7 +53,7 @@ export default class Header extends Component {
     };
     return (
       <header>
-        <nav className="navbar navbar-expand-md navbar-dark bg-primary">
+        <nav className="navbar navbar-expand navbar-dark bg-primary">
           <Link className="navbar-brand" to="/">
             FastPath
           </Link>
@@ -75,11 +76,6 @@ export default class Header extends Component {
               </a>
             </li> */}
               {myRoutes()}
-              <li className="nav-item">
-                <Link className="nav-link" to="./about.html">
-                  About
-                </Link>
-              </li>
             </ul>
           </div>
           <div className="accountButton">{accountButton()}</div>

@@ -1,7 +1,5 @@
 const https = require("https");
-const fs = require("fs");
 const fetch = require("node-fetch");
-const path = require("path");
 const formParser = require("./formParser");
 const { google_api_key } = require("../config/config");
 const elem_limit = 25; //half element limit
@@ -9,14 +7,6 @@ const elem_limit = 25; //half element limit
 let origin;
 let destination;
 let addresses;
-
-function fetchJSON(url) {
-  url = new URL(url);
-  //  console.time(url);
-  return fetch(url)
-    .then((response) => response.json() /*, console.timeEnd(url)*/)
-    .catch((err) => console.log(err));
-}
 
 module.exports = async (req) => {
   //Parses form data
@@ -37,6 +27,14 @@ module.exports = async (req) => {
   }
 };
 
+function fetchJSON(url) {
+  url = new URL(url);
+  //  console.time(url);
+  return fetch(url)
+    .then((response) => response.json() /*, console.timeEnd(url)*/)
+    .catch((err) => console.log(err));
+}
+
 async function getDistances(addresses) {
   var max = addresses.length - 1;
   var amount = Math.ceil(max / elem_limit);
@@ -45,14 +43,14 @@ async function getDistances(addresses) {
   if (maxi > max) maxi = max;
 
   for (let n = 0; n < max; n++) {
-    var origin = `${addresses[n]}`;
+    var origin = addresses[n];
     var destinations = "";
     for (let x = 0; x < amount; x++) {
       for (let m = x * elem_limit; m < (x + 1) * maxi; m++) {
         if (m == max - 1) {
-          destinations += `${addresses[m + 1]}`;
+          destinations += addresses[m + 1];
         } else if (n != m) {
-          destinations += `${addresses[m]}|`;
+          destinations += addresses[m] + '|';
         }
       }
       var url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destinations}&key=${google_api_key}`;

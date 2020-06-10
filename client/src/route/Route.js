@@ -2,32 +2,21 @@ import React, { Component } from "react";
 import "./route.css";
 import Map from "./Map";
 import RouteBoard from "./RouteBoard";
-import AuthHelperMethods from "../auth/AuthHelperMethods";
+import AuthHelperMethods from "../components/auth/AuthHelperMethods";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-
+import { Position, Toaster, Intent } from "@blueprintjs/core";
 class Route extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      directions: "",
-      firstMapRender: true,
       markedAddress: null,
-      alertShow: false,
     };
     this.handleAddressClick = this.handleAddressClick.bind(this);
-    this.shouldRerenderMap = this.shouldRerenderMap.bind(this);
   }
 
-  shouldRerenderMap() {
-    console.log(this.state.firstMapRender);
-    if (this.state.firstMapRender) {
-      console.log("firstMapRender");
-
-      this.setState({ firstMapRender: false });
-      return true;
-    }
-    return false;
-  }
+  refHandlers = {
+    toaster: (ref) => (this.toaster = ref),
+  };
 
   Auth = new AuthHelperMethods();
 
@@ -35,15 +24,18 @@ class Route extends Component {
     this.setState({ markedAddress: index });
   }
 
-  onShowAlert = () => {
-    this.setState({ alertShow: true }, () => {
-      window.setTimeout(() => {
-        this.setState({ alertShow: false });
-      }, 1000);
+  addToast = (message, intent, icon) => {
+    this.toaster.show({
+      message,
+      intent: intent || Intent.SUCCESS,
+      icon: icon || "tick",
+      timeout: 1500,
     });
   };
+
   saveRoute(e) {
     if (this.Auth.loggedIn()) {
+      this.addToast("Saved!");
       const token = this.Auth.getToken();
       fetch("/api/route/save", {
         method: "POST",
@@ -64,21 +56,11 @@ class Route extends Component {
         })
         .catch((error) => console.log(error));
     } else {
-      this.onShowAlert();
+      document.getElementById("loginAccount").click();
     }
   }
 
   render() {
-    console.log("did render");
-    const alertBox = () => {
-      if (this.state.alertShow) {
-        return (
-          <div className="alert alert-success" role="alert">
-            Route saved!
-          </div>
-        );
-      }
-    };
     return (
       <div className="container-fluid">
         <div className="row">
@@ -89,7 +71,6 @@ class Route extends Component {
                 process.env.REACT_APP_GOOGLE_API_KEY
               }
               loadingElement={<div style={{ height: `100%` }} />}
-              shouldRender={this.state.alertShowyy}
               route={this.props.routeData}
             />
           </div>
@@ -100,25 +81,35 @@ class Route extends Component {
             />
           </div>
         </div>
-        <div className="mt-4">
-          <div className="row">
-            <div className="col col-3">
-              <CopyToClipboard text={this.props.routeData.urlShort}>
-                <button className="btn btn-teal">Copy Route</button>
-              </CopyToClipboard>
-            </div>
-            <div className="col col-3">
-              <button
-                onClick={(e) => this.saveRoute(e)}
-                className="btn btn-teal"
-              >
-                Save route
-              </button>
+        <div id="buttonRow" className="row">
+          <div className="col-md-8">
+            <div className="row d-flex justify-content-around">
+              <div className="col">
+                <CopyToClipboard text={this.props.routeData.urlShort}>
+                  <button
+                    className="btn btn-teal"
+                    onClick={() => this.addToast("Copied!")}
+                  >
+                    Copy Route
+                  </button>
+                </CopyToClipboard>
+              </div>
+              <div className="col">
+                <button
+                  onClick={(e) => this.saveRoute(e)}
+                  className="btn btn-teal"
+                >
+                  Save route
+                </button>
+                <Toaster
+                  maxToasts={1}
+                  position={Position.TOP}
+                  ref={this.refHandlers.toaster}
+                />
+              </div>
             </div>
           </div>
         </div>
-
-        {alertBox()}
       </div>
     );
   }

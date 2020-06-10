@@ -1,6 +1,17 @@
 import React, { Component } from "react";
 import withAuth from "../auth/withAuth";
 import AuthHelperMethods from "../auth/AuthHelperMethods";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import {
+  Button,
+  Intent,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Classes,
+} from "@blueprintjs/core";
+import moment from "moment";
 import "./routes.css";
 
 class Routes extends Component {
@@ -89,34 +100,80 @@ class Routes extends Component {
     } else {
       return (
         <div className="container mt-5">
-          <div className="row">
+          <div className="row" id="routesRow">
             {this.state.routes.map((route, index) => {
               return (
                 <div
                   className="col col-12 col-lg-4 col-md-6 col-sm-12  mb-4"
                   key={index}
                 >
-                  <div className="card">
-                    <div
-                      onClick={() => this.viewRoute(index)}
-                      className="card-body"
-                    >
+                  <div
+                    className="card h-100"
+                    onClick={() => this.viewRoute(index)}
+                  >
+                    <div className="card-body d-flex justify-content-center">
                       <div className="card-title h6 text-center">
                         {route.origin + " - " + route.destination}
                       </div>
                     </div>
-                    <div className="card-footer">
+                    <div
+                      className="card-footer"
+                      onClick={(e) => {
+                        // prevents route delete button click
+                        // from triggering parent (and routing to /route)
+                        e.stopPropagation();
+                        e.preventDefault();
+                      }}
+                    >
                       <small className="text-muted">
-                        Last updated {route.created_at}
+                        {moment(route.created).format("LL")}
                       </small>
-                      <button
-                        onClick={() => this.deleteRoute(index)}
+                      <Popover
+                        className="close pull-right"
+                        aria-label="Close"
+                        interactionKind={PopoverInteractionKind.CLICK}
+                        popoverClassName="bp3-popover-content-sizing"
+                        position={Position.RIGHT}
+                      >
+                        <button type="button" className="close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div key="text">
+                          <p>
+                            Are you sure you want to delete these items? You
+                            won't be able to recover them.
+                          </p>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-end",
+                              marginTop: 15,
+                            }}
+                          >
+                            <Button
+                              className={Classes.POPOVER_DISMISS}
+                              style={{ marginRight: 10 }}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              intent={Intent.DANGER}
+                              className={Classes.POPOVER_DISMISS}
+                              onClick={() => this.deleteRoute(index)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      </Popover>
+                      {/* <button
+                        onClick={(e) => this.deleteRoute(e, index)}
                         type="button"
                         className="close pull-right"
                         aria-label="Close"
                       >
                         <span aria-hidden="true">&times;</span>
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>
@@ -132,16 +189,17 @@ class Routes extends Component {
     return (
       <div>
         <div className="h2 mt-4">Your routes</div>
-        <div id="routes" className="mx-auto w-80">
+        <div id="routes" className="mx-auto w-80 mt-n4 mt-md-0 ">
           {this.routes()}
         </div>
-        <button
-          id="createRoute"
-          className="btn btn-rounded btn-teal mt-5"
+        <Fab
+          id="fab"
+          className="btn-teal"
+          aria-label="add"
           onClick={() => this.props.history.push("/")}
         >
-          Create Route
-        </button>
+          <AddIcon />
+        </Fab>
       </div>
     );
   }

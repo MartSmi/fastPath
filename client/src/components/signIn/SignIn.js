@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import "./signIn.css";
 import AuthHelperMethods from "../auth/AuthHelperMethods";
 class SignIn extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       loginEmail: "",
       loginPassword: "",
@@ -26,12 +26,8 @@ class SignIn extends Component {
           if (res === false) {
             return alert("Sorry those credentials don't exist!");
           } else {
-            console.log(this.Auth.loggedIn());
             this.props.handleLogin();
-            console.log(this.Auth.loggedIn());
-
             document.getElementById("close").click();
-            this.props.history.push("/routes");
           }
         })
         .catch((err) => {
@@ -158,30 +154,11 @@ class SignIn extends Component {
                       </fieldset>
                       <div className="text-center mb-3">
                         <button
+                          id="signInButton"
                           type="submit"
                           className="btn btn-teal btn-rounded btn-block"
                         >
                           Sign in
-                        </button>
-                      </div>
-                      <div className="row my-3 d-flex justify-content-center">
-                        <button
-                          type="button"
-                          className="btn btn-white btn-rounded mr-md-3 z-depth-1a"
-                        >
-                          <i className="fab fa-facebook-f text-center" />
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-white btn-rounded mr-md-3 z-depth-1a"
-                        >
-                          <i className="fab fa-twitter" />
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-white btn-rounded z-depth-1a"
-                        >
-                          <i className="fab fa-google-plus-g" />
                         </button>
                       </div>
                     </form>
@@ -254,30 +231,11 @@ class SignIn extends Component {
                       </fieldset>
                       <div className="text-center mb-3">
                         <button
+                          id="signInButton"
                           type="submit"
                           className="btn btn-teal btn-rounded btn-block"
                         >
                           Sign up
-                        </button>
-                      </div>
-                      <div className="row my-3 d-flex justify-content-center">
-                        <button
-                          type="button"
-                          className="btn btn-white btn-rounded mr-md-3 z-depth-1a"
-                        >
-                          <i className="fab fa-facebook-f text-center" />
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-white btn-rounded mr-md-3 z-depth-1a"
-                        >
-                          <i className="fab fa-twitter" />
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-white btn-rounded z-depth-1a"
-                        >
-                          <i className="fab fa-google-plus-g" />
                         </button>
                       </div>
                     </form>

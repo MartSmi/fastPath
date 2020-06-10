@@ -15,7 +15,7 @@ module.exports = async (req_body) => {
   });
 
   //origin
-  if (req_body["origin"] != null) {
+  if (req_body["origin"] != "") {
     if (typeof req_body["origin"]["description"] == "undefined") {
       waypoints.push(req_body["origin"]);
     } else {
@@ -26,7 +26,7 @@ module.exports = async (req_body) => {
   }
 
   //destination
-  if (req_body["destination"] != null) {
+  if (req_body["destination"] != "") {
     if (typeof req_body["destination"]["description"] == "undefined") {
       waypoints.push(req_body["destination"]);
     } else {

@@ -22,11 +22,6 @@
   border-radius: 10em;
 }
 
-.btn-teal {
-  color: #fff;
-  background-color: #009688;
-}
-
 .btn-outline-teal {
   color: #2bbbad !important;
   background-color: transparent;
@@ -56,4 +51,24 @@
 .form-elegant .modal-body,
 .form-elegant .modal-footer {
   font-weight: 400;
+}
+
+.modal-backdrop.show {
+  opacity: 0.6;
+}
+
+.bmd-form-group.is-filled .bmd-label-floating {
+  top: 0.75rem !important;
+  left: 0.5rem !important;
+}
+
+.bmd-form-group.is-focused .bmd-label-floating {
+  top: 0.75rem !important;
+  left: 0.5rem !important;
+}
+
+@media only screen and (max-width: 575px) {
+  #signInButton {
+    height: 40px;
+  }
 }

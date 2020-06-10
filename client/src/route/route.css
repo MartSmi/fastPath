@@ -1,0 +1,39 @@
+@import "~normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+
+body {
+  height: 100vh;
+}
+
+.container-fluid {
+  top: 0;
+  height: 90vh;
+}
+
+.row {
+  margin-top: 1%;
+  height: 78%;
+}
+
+.board {
+  padding-left: 0;
+}
+
+#mapHolder {
+  height: 100%;
+}
+
+#buttonRow {
+  height: auto !important;
+}
+
+.justify-content-around {
+  justify-content: space-evenly !important;
+}
+
+#fab {
+  position: fixed;
+  bottom: 10vh;
+  right: 8vw;
+}

@@ -7,10 +7,8 @@ class Form extends Component {
     super(props);
     this.state = {
       origin: "Vilnius, Lithuania",
-      origin_exists: true,
       waypoints: ["Klaipėda, Lithuania", "Panemunė, Lithuania"],
       destination: "Kaunas, Lithuania",
-      destination_exists: true,
     };
   }
 
@@ -22,9 +20,6 @@ class Form extends Component {
   };
 
   changeOrigin(v) {
-    console.log("origin");
-    console.log(v);
-
     this.setState({ origin: v });
   }
 
@@ -33,6 +28,10 @@ class Form extends Component {
   }
 
   handleSubmit(event) {
+    let body = {};
+    body.waypoints = this.state.waypoints;
+    body.origin = this.state.origin;
+    body.destination = this.state.destination;
     event.preventDefault();
     fetch("/api/route/create", {
       method: "POST",
@@ -40,7 +39,7 @@ class Form extends Component {
         Accept: "application/json",
         "Content-type": "application/json",
       },
-      body: JSON.stringify(this.state),
+      body: JSON.stringify(body),
     })
       .then((response) => {
         // this.props.result = result;
@@ -73,7 +72,11 @@ class Form extends Component {
   render() {
     let label_waypoints;
     if (this.state.waypoints.length >= 1) {
-      label_waypoints = <label htmlFor="waypoint0">Waypoints</label>;
+      label_waypoints = (
+        <label class="bmd-label-static" htmlFor="waypoint0">
+          Waypoints
+        </label>
+      );
     }
 
     let button_add = (onClick) => {
@@ -103,66 +106,47 @@ class Form extends Component {
     };
 
     let origin_part = () => {
-      if (this.state.origin_exists) {
-        return (
-          <div className="form-group">
-            <label htmlFor="origin">Origin</label>
-            <div className="input-line row">
-              <div className="col">
-                <Autocomplete
-                  placeholder="Origin address"
-                  onChange={(v) => this.changeOrigin(v)}
-                  value={this.state.origin}
-                />
-              </div>
-              {button_close(() => {
-                this.setState({ origin_exists: false });
-              })}
+      return (
+        <div className="form-group">
+          <label class="bmd-label-static" htmlFor="origin">
+            Origin
+          </label>
+          <div className="input-line row">
+            <div className="col">
+              <Autocomplete
+                placeholder="Origin address"
+                onChange={(v) => this.changeOrigin(v)}
+                value={this.state.origin}
+              />
             </div>
           </div>
-        );
-      } else {
-        return (
-          <div className="form-group">
-            {button_add(() => {
-              this.setState({ origin_exists: true });
-            })}
-          </div>
-        );
-      }
+        </div>
+      );
     };
 
     let destination_part = () => {
-      if (this.state.destination_exists) {
-        return (
-          <div className="form-group">
-            <label htmlFor="destination">Destination</label>
-            <div className="input-line row">
-              <div className="col">
-                <Autocomplete
-                  placeholder="Destination address"
-                  onChange={(v) => this.changeDestination(v)}
-                  value={this.state.destination}
-                />
-              </div>
-              {button_close(() => this.setState({ destination_exists: false }))}
+      return (
+        <div className="form-group">
+          <label class="bmd-label-static" htmlFor="destination">
+            Destination
+          </label>
+          <div className="input-line row">
+            <div className="col">
+              <Autocomplete
+                placeholder="Destination address"
+                onChange={(v) => this.changeDestination(v)}
+                value={this.state.destination}
+              />
             </div>
           </div>
-        );
-      } else {
-        return (
-          <div className="form-group">
-            {button_add(() => {
-              this.setState({ destination_exists: true });
-            })}
-          </div>
-        );
-      }
+        </div>
+      );
     };
 
     return (
-      <div id="form">
+      <div id="form" className="row d-flex justify-content-center mr-0">
         <form
+          className="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-11 pr-0"
           onSubmit={(e) => {
             this.handleSubmit(e);
           }}
