@@ -35,7 +35,6 @@ class Route extends Component {
 
   saveRoute(e) {
     if (this.Auth.loggedIn()) {
-      this.addToast("Saved!");
       const token = this.Auth.getToken();
       fetch("/api/route/save", {
         method: "POST",
@@ -49,6 +48,7 @@ class Route extends Component {
         .then((response) => {
           // this.props.result = result;
           if (response.status === 200) {
+            this.addToast("Saved!");
             return response.json();
           } else {
             throw new Error("Bad response: " + response);

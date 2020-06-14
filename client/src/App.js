@@ -30,21 +30,14 @@ export default class App extends Component {
   };
 
   handleRouteDataResponse(data) {
-    console.log(data);
-
     localStorage.setItem("routeData", JSON.stringify(data.route));
     this.setState({ routeData: data.route });
   }
 
   getRouteData() {
-    console.log(this.state.selectedRoute);
-
     if (this.state.selectedRoute !== null) {
       return this.state.selectedRoute;
-    }
-    if (this.state.routeData === undefined) {
-      console.log("undefined routeData");
-      console.log(localStorage.getItem("routeData"));
+    } else if (this.state.routeData === undefined) {
       let item = localStorage.getItem("routeData");
       return JSON.parse(item);
     } else {

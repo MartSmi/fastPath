@@ -11,7 +11,7 @@ export default function RouteBoard(props) {
         id="list-home-list"
         data-toggle="list"
         role="tab"
-        href="#"
+        href="/#"
         aria-controls={address}
         onClick={() => props.handleAddressClick(index)}
       >

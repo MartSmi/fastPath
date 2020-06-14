@@ -30,6 +30,37 @@ label {
   margin-bottom: -0.5rem;
 }
 
+.transport {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.h-50px {
+  height: 50px;
+}
+.btn-mlg {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.MuiButtonBase-root.MuiFab-root.MuiSpeedDial-fab.MuiFab-primary {
+  width: 50px;
+  height: 50px;
+}
+
+.makeStyles-speedDial-92.MuiSpeedDial-directionUp,
+.makeStyles-speedDial-92.MuiSpeedDial-directionLeft {
+  right: 0 !important;
+  bottom: -25px !important;
+}
+
+/* .bmd-label-static {
+  position: absolute;
+  display: inline-block;
+  line-height: 12px;
+} */
+
 /* #form {
   width: 100vw;
 } */

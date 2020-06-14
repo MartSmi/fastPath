@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import "./form.css";
 import Autocomplete from "./autocomplete/Autocomplete";
-
+import Transport from "./Transport";
 class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      origin: "Vilnius, Lithuania",
-      waypoints: ["Klaipėda, Lithuania", "Panemunė, Lithuania"],
-      destination: "Kaunas, Lithuania",
+      origin: "",
+      waypoints: ["", ""],
+      destination: "",
+      travelMode: "driving",
     };
   }
-
+  changeTravelMode = (mode) => {
+    this.setState({ travelMode: mode });
+  };
   changeWaypoint = (address, index) => {
     let waypoints = this.state.waypoints;
     waypoints[index] = address;
@@ -32,6 +35,7 @@ class Form extends Component {
     body.waypoints = this.state.waypoints;
     body.origin = this.state.origin;
     body.destination = this.state.destination;
+    body.mode = this.state.travelMode;
     event.preventDefault();
     fetch("/api/route/create", {
       method: "POST",
@@ -73,7 +77,7 @@ class Form extends Component {
     let label_waypoints;
     if (this.state.waypoints.length >= 1) {
       label_waypoints = (
-        <label class="bmd-label-static" htmlFor="waypoint0">
+        <label className="bmd-label-static" htmlFor="waypoint0">
           Waypoints
         </label>
       );
@@ -96,7 +100,7 @@ class Form extends Component {
       return (
         <button
           type="button"
-          className="close col-sm-"
+          className="close"
           aria-label="Close"
           onClick={onClick}
         >
@@ -107,8 +111,8 @@ class Form extends Component {
 
     let origin_part = () => {
       return (
-        <div className="form-group">
-          <label class="bmd-label-static" htmlFor="origin">
+        <div className="form-group mb-1 bmd-form-group">
+          <label className="bmd-label-static" htmlFor="origin">
             Origin
           </label>
           <div className="input-line row">
@@ -126,8 +130,8 @@ class Form extends Component {
 
     let destination_part = () => {
       return (
-        <div className="form-group">
-          <label class="bmd-label-static" htmlFor="destination">
+        <div className="form-group bmd-form-group">
+          <label className="bmd-label-static" htmlFor="destination">
             Destination
           </label>
           <div className="input-line row">
@@ -144,7 +148,7 @@ class Form extends Component {
     };
 
     return (
-      <div id="form" className="row d-flex justify-content-center mr-0">
+      <div id="form" className="row d-flex justify-content-center mr-0 mt-4">
         <form
           className="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-11 pr-0"
           onSubmit={(e) => {
@@ -152,7 +156,7 @@ class Form extends Component {
           }}
         >
           {origin_part()}
-          <div id="waypoints" className="form-group">
+          <div id="waypoints" className="form-group mb-0 bmd-form-group">
             {label_waypoints}
             {this.state.waypoints.map((address, index) => {
               return (
@@ -176,9 +180,23 @@ class Form extends Component {
             })}
           </div>
           {destination_part()}
-          <button type="submit" className="btn btn-teal btn-rounded btn-raised">
-            Generate
-          </button>
+          <div className="form-group">
+            <div className="row h-50px">
+              <div className="col col-6 h-50px d-flex justify-content-center">
+                <div className="transport">
+                  <Transport changeTravelMode={this.changeTravelMode} />
+                </div>
+              </div>
+              <div className="col col-6 d-flex justify-content-start h-50px">
+                <button
+                  type="submit"
+                  className="btn btn-teal btn-mlg btn-rounded btn-raised"
+                >
+                  Create
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     );

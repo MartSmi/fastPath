@@ -3,20 +3,15 @@ import { Link } from "react-router-dom";
 import AuthHelperMethods from "../auth/AuthHelperMethods";
 
 export default class Header extends Component {
-  constructor(props) {
-    super(props);
-  }
   Auth = new AuthHelperMethods();
 
   render() {
-    console.log("this.props.loggedIn");
-    console.log(this.props.loggedIn);
     const accountButton = () => {
       if (this.props.loggedIn) {
         return (
           <div className="text-center">
             <a
-              href=""
+              href="/#"
               className="btn btn-default btn-rounded"
               onClick={this.Auth.logout}
             >
@@ -29,7 +24,7 @@ export default class Header extends Component {
           <div className="text-center">
             <a
               id="loginAccount"
-              href=""
+              href="/#"
               className="btn btn-default btn-rounded"
               data-toggle="modal"
               data-target="#modalLRForm"

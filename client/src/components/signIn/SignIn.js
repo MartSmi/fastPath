@@ -23,7 +23,7 @@ class SignIn extends Component {
     if (e.target.id === "login") {
       this.Auth.login(this.state.loginEmail, this.state.loginPassword)
         .then((res) => {
-          if (res === false) {
+          if (res.success === false) {
             return alert("Sorry those credentials don't exist!");
           } else {
             this.props.handleLogin();
@@ -31,7 +31,7 @@ class SignIn extends Component {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.message);
         });
     } else if (e.target.id === "register") {
       const newUser = {
@@ -212,6 +212,9 @@ class SignIn extends Component {
                           className="form-control"
                           id="registerPassword"
                         />
+                        <span className="bmd-help">
+                          Password must be at least 6 characters long
+                        </span>
                       </fieldset>
                       <fieldset className="form-group">
                         <label

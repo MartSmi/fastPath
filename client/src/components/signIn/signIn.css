@@ -23,9 +23,9 @@
 }
 
 .btn-outline-teal {
-  color: #2bbbad !important;
+  color: teal !important;
   background-color: transparent;
-  border: 1px solid #2bbbad !important;
+  border: 1px solid teal !important;
 }
 
 .btn-outline-teal:hover {

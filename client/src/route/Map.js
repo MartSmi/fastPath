@@ -17,14 +17,10 @@ class Map extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     // return true;
     if (this.state.directions === null && nextState.directions !== null) {
-      console.log("directions === null");
       return true;
     } else if (nextProps.route === this.props.route) {
-      console.log("stopped a rerender");
       return false;
     } else {
-      console.log("bypassed");
-
       return true;
     }
   }
@@ -58,12 +54,14 @@ class Map extends Component {
       return { location: address, stopover: true };
     });
 
+    let mode = this.props.route.mode || google.maps.TravelMode.DRIVING;
+
     directionsService.route(
       {
         origin: origin,
         destination: destination,
         waypoints: waypoints,
-        travelMode: google.maps.TravelMode.DRIVING,
+        travelMode: mode.toUpperCase(),
       },
       (result, status) => {
         if (status === google.maps.DirectionsStatus.OK) {
@@ -75,7 +73,6 @@ class Map extends Component {
         }
       }
     );
-    console.log("finally");
   }
 
   render() {

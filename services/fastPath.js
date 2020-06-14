@@ -7,6 +7,7 @@ const elem_limit = 25; //half element limit
 let origin;
 let destination;
 let addresses;
+let mode;
 
 module.exports = async (req) => {
   //Parses form data
@@ -14,6 +15,7 @@ module.exports = async (req) => {
   addresses = tmp.waypoints;
   origin = tmp.origin;
   destination = tmp.destination;
+  mode = req.mode;
   try {
     let distances = await getDistances(addresses);
     let fastestOrder = await findFastest(distances);
@@ -21,6 +23,7 @@ module.exports = async (req) => {
     let routeUrl = getRouteUrl(fastestOrder);
     let urlShort = await urlShortener(routeUrl);
     fastestRoute.urlShort = urlShort;
+    fastestRoute.mode = mode;
     return { route: fastestRoute };
   } catch (error) {
     throw "This route is not available";
@@ -50,10 +53,10 @@ async function getDistances(addresses) {
         if (m == max - 1) {
           destinations += addresses[m + 1];
         } else if (n != m) {
-          destinations += addresses[m] + '|';
+          destinations += addresses[m] + "|";
         }
       }
-      var url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destinations}&key=${google_api_key}`;
+      var url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destinations}&mode=${mode}&key=${google_api_key}`;
       url = url.replace(/\s/g, "+");
       urls.push(url);
     }
