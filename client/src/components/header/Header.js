@@ -11,9 +11,12 @@ export default class Header extends Component {
         return (
           <div className="text-center">
             <a
-              href="/#"
+              href=""
               className="btn btn-default btn-rounded"
-              onClick={this.Auth.logout}
+              onClick={() => {
+                this.Auth.logout();
+                this.forceUpdate();
+              }}
             >
               <i className="fas fa-sign-out-alt"></i>
             </a>

@@ -1,10 +1,9 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   withGoogleMap,
   GoogleMap,
-  withScriptjs,
   DirectionsRenderer,
-} from "react-google-maps";
+} from 'react-google-maps';
 
 class Map extends Component {
   constructor(props) {
@@ -26,16 +25,16 @@ class Map extends Component {
   }
 
   mapContainerStyle = {
-    height: "100%",
-    width: "100%",
+    height: '100%',
+    width: '100%',
   };
 
   divStyle = {
-    position: "relative",
-    marginLeft: "auto",
-    marginRight: "auto",
-    height: "100%",
-    width: "100%",
+    position: 'relative',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    height: '100%',
+    width: '100%',
   };
 
   options = {
@@ -50,7 +49,7 @@ class Map extends Component {
     const origin = this.props.route.origin;
     const destination = this.props.route.destination;
 
-    const waypoints = this.props.route.waypoints.map((address) => {
+    const waypoints = this.props.route.waypoints.map(address => {
       return { location: address, stopover: true };
     });
 
@@ -76,7 +75,7 @@ class Map extends Component {
   }
 
   render() {
-    const GoogleMapExample = withGoogleMap((props) => (
+    const GoogleMapExample = withGoogleMap(props => (
       <GoogleMap options={this.options}>
         <DirectionsRenderer directions={this.state.directions} />
       </GoogleMap>
@@ -93,4 +92,4 @@ class Map extends Component {
   }
 }
 
-export default withScriptjs(Map);
+export default Map;

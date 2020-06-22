@@ -59,7 +59,7 @@ class SignIn extends Component {
         })
         .then((data) => {
           // this.props.onRouteDataResponse(data);
-          this.props.history.push("/login");
+          // this.props.history.push("/login");
         })
         .catch((error) => console.log(error));
     }
@@ -97,6 +97,7 @@ class SignIn extends Component {
                   </li>
                   <li className="nav-item">
                     <a
+                      id="registerPanel"
                       className="nav-link"
                       data-toggle="tab"
                       href="#panel8"

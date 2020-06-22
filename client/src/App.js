@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import Header from "./components/header/Header";
 import AddressForm from "./components/address_form/Form";
-import RouteMap from "./route/Route";
+import RouteMap from "./components/route/Route";
 import SignIn from "./components/signIn/SignIn";
 import Routes from "./components/routes/Routes";
 import AuthHelperMethods from "./components/auth/AuthHelperMethods";

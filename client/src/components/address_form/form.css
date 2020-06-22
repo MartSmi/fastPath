@@ -47,6 +47,7 @@ label {
 .MuiButtonBase-root.MuiFab-root.MuiSpeedDial-fab.MuiFab-primary {
   width: 50px;
   height: 50px;
+  transition: none !important;
 }
 
 .makeStyles-speedDial-92.MuiSpeedDial-directionUp,
